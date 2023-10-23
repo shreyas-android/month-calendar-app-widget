@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
+    id("maven-publish")
 }
 
 android {
@@ -16,13 +17,13 @@ android {
     }
 
     buildTypes {
-        release {
+        /*release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
+        }*/
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -36,17 +37,71 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion =  "1.4.0"
+        kotlinCompilerExtensionVersion = "1.4.0"
+    }
+
+
+    publishing {
+        singleVariant("release") {
+            // if you don't want sources/javadoc, remove these lines
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
+    publishing {
+       /* publications {
+            create<MavenPublication>("release") {
+                groupId = "com.androidai.widget"
+                artifactId = "month-calendar"
+                version = "1.0"
+
+                from(components["release"])
+            }
+        }*/
+    }
+
+
+    /*afterEvaluate {
+        publishing {
+            publications {
+                register<MavenPublication>("release") {
+                    groupId = "com.androidai.widget"
+                    artifactId = "month-calendar"
+                    version = "1.0"
+
+                    afterEvaluate {
+                        from(components["release"])
+                    }
+                }
+            }
+        }
+    }*/
+
+    dependencies {
+
+        implementation(libs.core.ktx)
+        implementation(libs.appcompat)
+        implementation(libs.material)
+        testImplementation(libs.junit)
+        androidTestImplementation(libs.androidx.test.ext.junit)
+        androidTestImplementation(libs.espresso.core)
+        implementation(libs.glance)
     }
 }
 
-dependencies {
+afterEvaluate {
+    publishing{
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.androidai.widget"
+                artifactId = "month-calendar"
+                version = "1.0"
 
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    implementation(libs.glance)
+                afterEvaluate {
+                    from(components["release"])
+                }
+            }
+        }
+    }
 }
