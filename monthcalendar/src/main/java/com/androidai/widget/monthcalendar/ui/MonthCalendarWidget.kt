@@ -1,7 +1,9 @@
 package com.androidai.widget.monthcalendar.ui
 
 import android.content.Context
+import android.graphics.drawable.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.toArgb
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -31,10 +33,12 @@ import com.androidai.widget.monthcalendar.utils.MonthCalendarWidgetUtils
 import java.util.Calendar
 
 @Composable
-fun MonthCalendarWidget(monthCalendarArg: MonthCalendarArg, onDateClick: Action,
-                        onGoToPreviousMonth: Action, onGoToNextMonth: Action,
-                        monthCalendarColors: MonthCalendarColors = MonthCalendarDefaults
-                            .getMonthCalendarColors()) {
+fun MonthCalendarWidget(
+    monthCalendarArg: MonthCalendarArg, onDateClick: Action,
+    onGoToPreviousMonth: () -> Unit, onGoToNextMonth :() -> Unit,
+    monthCalendarColors: MonthCalendarColors = MonthCalendarDefaults
+        .getMonthCalendarColors()
+) {
     MonthCalendarView(
         calendar = MonthCalendarWidgetUtils.getCalendar(monthCalendarArg.currentMonth),
         firstDayOfMonth = monthCalendarArg.firstDayOfMonth,
@@ -46,10 +50,10 @@ fun MonthCalendarWidget(monthCalendarArg: MonthCalendarArg, onDateClick: Action,
 }
 
 @Composable
-fun MonthCalendarView(
+private fun MonthCalendarView(
     modifier: GlanceModifier = GlanceModifier,
     calendar: Calendar, firstDayOfMonth: Int,
-    onGoToPreviousMonth: Action, onGoToNextMonth: Action,onDateClick: Action,
+    onGoToPreviousMonth: () -> Unit, onGoToNextMonth :() -> Unit, onDateClick: Action,
     monthCalendarColors: MonthCalendarColors,
 ) {
     val context = LocalContext.current
@@ -69,18 +73,19 @@ fun MonthCalendarView(
 private fun MonthCalendarHeaderView(
     context: Context,
     calendar: Calendar,
-    onGoToPreviousMonth: Action, onGoToNextMonth: Action,
+    onGoToPreviousMonth: () -> Unit, onGoToNextMonth :() -> Unit,
     monthCalendarColors: MonthCalendarColors,
 
 ) {
-    Row(modifier = GlanceModifier.fillMaxWidth().padding(vertical = Dimens.defaultPadding)) {
-        Row(
-            modifier = GlanceModifier.defaultWeight(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+    Row(modifier = GlanceModifier.fillMaxWidth().padding(vertical = Dimens.defaultPadding), verticalAlignment = Alignment.CenterVertically, horizontalAlignment = Alignment.CenterHorizontally) {
+        val leftIcon = Icon.createWithResource(context, R.drawable.ic_widget_arrow_left)
+        leftIcon.setTint(monthCalendarColors.iconColor.getColor(context).toArgb())
+
+        val rightIcon = Icon.createWithResource(context, R.drawable.ic_widget_arrow_right)
+        rightIcon.setTint(monthCalendarColors.iconColor.getColor(context).toArgb())
             Image(
                 modifier = getHeaderImageModifier(onGoToPreviousMonth),
-                provider = getArrowLeftIcon(),
+                provider = ImageProvider(leftIcon),
                 contentDescription = getResString(context, R.string.desc_previous_month)
             )
             Text(
@@ -94,11 +99,10 @@ private fun MonthCalendarHeaderView(
             )
             Image(
                 modifier = getHeaderImageModifier(onGoToNextMonth),
-                provider = getArrowRightIcon(),
+                provider = ImageProvider(rightIcon),
                 contentDescription = getResString(context, R.string.desc_next_month)
             )
         }
-    }
 }
 
 private fun getResString(context: Context, stringResId: Int): String {
@@ -127,7 +131,7 @@ private fun getFormatString(timeInMillis: Long, requiredFormat: String): String 
 }
 
 @Composable
-fun DaysOfWeek(firstDayOfWeek: Int, monthCalendarColors: MonthCalendarColors) {
+private fun DaysOfWeek(firstDayOfWeek: Int, monthCalendarColors: MonthCalendarColors) {
     val weekDayCalendar = MonthCalendarWidgetUtils.getCalendar()
     weekDayCalendar.set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
     Row(modifier = GlanceModifier.fillMaxWidth()) {
@@ -247,20 +251,25 @@ private fun getDateTextChildModifier(isCurrentMonth: Boolean):
     }
 }
 
-private fun getHeaderImageModifier(onClick: Action): GlanceModifier {
+@Composable
+private fun getHeaderImageModifier(onClick: () -> Unit): GlanceModifier {
     return GlanceModifier.size(Dimens.imageSize)
-        .clickable(onClick).padding(
+        .clickable{
+            onClick()
+        }.padding(
             vertical = Dimens.defaultHalfPadding,
             horizontal = Dimens.defaultHalfPadding
         )
 }
 
-private fun getArrowLeftIcon(): ImageProvider {
-    return getImageProvider(R.drawable.ic_widget_arrow_left)
+private fun getArrowLeftIcon(context: Context): ImageProvider {
+    val icon = Icon.createWithResource(context, R.drawable.ic_widget_arrow_left)
+    return ImageProvider(icon)
 }
 
-private fun getArrowRightIcon(): ImageProvider {
-    return getImageProvider(R.drawable.ic_widget_arrow_right)
+private fun getArrowRightIcon(context: Context): ImageProvider {
+    val icon = Icon.createWithResource(context, R.drawable.ic_widget_arrow_right)
+    return ImageProvider(icon)
 }
 
 private fun getImageProvider(drawableResId: Int) = ImageProvider(drawableResId)

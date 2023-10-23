@@ -3,7 +3,7 @@ package com.androidai.widget.monthcalendar.ui.resources
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-object Dimens {
+internal object Dimens {
 
     val defaultPadding = 8.dp
     val defaultHalfPadding = 4.dp
@@ -17,6 +17,6 @@ object Dimens {
 
     val largeFontSize = 16.sp
 
-    val imageSize = 16.dp
+    val imageSize = 28.dp
 
 }
