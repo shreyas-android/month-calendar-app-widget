@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-object MonthCalendarWidgetUtils {
+internal object MonthCalendarWidgetUtils {
 
     const val ROW_COUNT = 6
     const val COLUMN_COUNT = 7
