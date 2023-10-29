@@ -40,44 +40,6 @@ android {
         kotlinCompilerExtensionVersion = "1.4.0"
     }
 
-
-    publishing {
-        singleVariant("release") {
-            // if you don't want sources/javadoc, remove these lines
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-
-    publishing {
-       /* publications {
-            create<MavenPublication>("release") {
-                groupId = "com.androidai.widget"
-                artifactId = "month-calendar"
-                version = "1.0"
-
-                from(components["release"])
-            }
-        }*/
-    }
-
-
-    /*afterEvaluate {
-        publishing {
-            publications {
-                register<MavenPublication>("release") {
-                    groupId = "com.androidai.widget"
-                    artifactId = "month-calendar"
-                    version = "1.0"
-
-                    afterEvaluate {
-                        from(components["release"])
-                    }
-                }
-            }
-        }
-    }*/
-
     dependencies {
 
         implementation(libs.core.ktx)
