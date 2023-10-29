@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionSendBroadcast
 import androidx.glance.appwidget.provideContent
 import com.androidai.demo.monthcalendar.utils.CalendarUtils
@@ -13,6 +14,9 @@ import com.androidai.widget.monthcalendar.ui.MonthCalendarWidget
 import java.util.Calendar
 
 class MonthCalendarDemoWidget : GlanceAppWidget() {
+
+    override val sizeMode: SizeMode
+        get() = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
